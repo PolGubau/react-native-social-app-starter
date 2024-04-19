@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { SplashScreen, Stack } from "expo-router";
 import { useFonts } from "expo-font";
 import { StatusBar } from "expo-status-bar";
+import GlobalProvider from "../context/GlobalProvider";
 
 const RootLayout = () => {
   const [fontsLoaded, error] = useFonts({
@@ -32,7 +33,7 @@ const RootLayout = () => {
     return null;
   }
   return (
-    <>
+    <GlobalProvider>
       <Stack>
         <Stack.Screen
           name="index"
@@ -53,8 +54,7 @@ const RootLayout = () => {
           }}
         />
       </Stack>
-      <StatusBar style="light" backgroundColor="#161622" />
-    </>
+    </GlobalProvider>
   );
 };
 

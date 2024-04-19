@@ -1,10 +1,12 @@
-import { View, Text, ScrollView, Image, Alert } from "react-native";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
+import { Alert, Image, ScrollView, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { images } from "../../constants";
-import Input from "../../components/Input";
 import CustomButton from "../../components/CustomButton";
-import { Link } from "expo-router";
+import Input from "../../components/Input";
+import { images } from "../../constants";
+import { createUser } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignUp = () => {
   const [form, setForm] = useState({
@@ -12,18 +14,32 @@ const SignUp = () => {
     email: "",
     password: "",
   });
+  const { setUser, setIsLogged } = useGlobalContext();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const submit = () => {
+  const submit = async () => {
+    if (!form.userName || !form.email || !form.password) {
+      Alert.alert("Error", "Please fill all fields");
+      return;
+    }
+
     setIsSubmitting(true);
-    Alert.alert("Login", JSON.stringify(form), [
-      {
-        text: "OK",
-        onPress: () => {
-          setIsSubmitting(false);
-        },
-      },
-    ]);
+    try {
+      const result = await createUser({
+        username: form.userName,
+        password: form.password,
+        email: form.email,
+      });
+
+      setUser(result);
+      setIsLogged(true);
+      if (result.error) throw new Error(result.error.message);
+      router.push("/home");
+    } catch (error) {
+      Alert.alert("Error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -43,8 +59,8 @@ const SignUp = () => {
               label="UserName"
               placeholder="Enter your username"
               value={form.userName}
-              handleChange={(value) => setForm({ ...form, username: value })}
-              className="mt-7"
+              handleChange={(value) => setForm({ ...form, userName: value })}
+              className="mt-10"
             />
             <Input
               label="Email"
@@ -65,9 +81,9 @@ const SignUp = () => {
 
             <CustomButton
               isLoading={isSubmitting}
-              title="Login"
+              title="Sign Up"
               containerStyles="mt-7"
-              handlePress={submit}
+              onPress={submit}
             />
 
             <View>

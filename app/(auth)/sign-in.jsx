@@ -4,25 +4,41 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { images } from "../../constants";
 import Input from "../../components/Input";
 import CustomButton from "../../components/CustomButton";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
+import { signIn } from "../../lib/appwrite";
+import { useGlobalContext } from "../../context/GlobalProvider";
 
 const SignIn = () => {
   const [form, setForm] = useState({
     email: "",
     password: "",
   });
+  const { setUser, setIsLogged } = useGlobalContext();
 
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const submit = () => {
+  const submit = async () => {
+    if (!form.email || !form.password) {
+      Alert.alert("Error", "Please fill all fields");
+      return;
+    }
+
     setIsSubmitting(true);
-    Alert.alert("Login", JSON.stringify(form), [
-      {
-        text: "OK",
-        onPress: () => {
-          setIsSubmitting(false);
-        },
-      },
-    ]);
+    try {
+      const result = await signIn({
+        email: form.email,
+        password: form.password,
+      });
+
+      setUser(result);
+      setIsLogged(true);
+
+      if (result.error) throw new Error(result.error.message);
+      router.push("/home");
+    } catch (error) {
+      Alert.alert("Catched error", error.message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -57,9 +73,9 @@ const SignIn = () => {
 
             <CustomButton
               isLoading={isSubmitting}
-              title="Login"
+              title="Sign In"
               containerStyles="mt-7"
-              handlePress={submit}
+              onPress={submit}
             />
 
             <View>

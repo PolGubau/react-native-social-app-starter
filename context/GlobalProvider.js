@@ -1,8 +1,15 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import { getCurrentUser } from "../lib/appwrite";
 
-const GlobalContext = createContext();
+const GlobalContext = createContext(null);
+
 export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
@@ -29,18 +36,19 @@ const GlobalProvider = ({ children }) => {
       });
   }, []);
 
+  const value = useMemo(
+    () => ({
+      isLogged,
+      setIsLogged,
+      user,
+      setUser,
+      loading,
+    }),
+    [isLogged, user, loading]
+  );
+
   return (
-    <GlobalContext.Provider
-      value={{
-        isLogged,
-        setIsLogged,
-        user,
-        setUser,
-        loading,
-      }}
-    >
-      {children}
-    </GlobalContext.Provider>
+    <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
   );
 };
 
