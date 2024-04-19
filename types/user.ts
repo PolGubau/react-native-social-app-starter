@@ -3,6 +3,6 @@ interface User {
   email: string;
   avatar: string;
   accountId: string;
-  id: string;
+  $id: string;
 }
 export default User;

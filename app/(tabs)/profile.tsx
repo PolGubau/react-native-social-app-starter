@@ -1,16 +1,23 @@
 import { router } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { View, Image, FlatList, TouchableOpacity } from "react-native";
 
 import { icons } from "../../constants";
 import useAppwrite from "../../lib/useAppwrite";
 import { getUserPosts, signOut } from "../../lib/appwrite";
 import { useGlobalContext } from "../../context/GlobalProvider";
 import { EmptyState, InfoBox, VideoCard } from "../../components";
+import {
+  FlatList,
+  Image,
+  SafeAreaView,
+  TouchableOpacity,
+  View,
+} from "../../api/elements";
+import { renderItem } from "./home";
+import { Post } from "../../types/post";
 
 const Profile = () => {
   const { user, setUser, setIsLogged } = useGlobalContext();
-  const { data: posts } = useAppwrite(() => getUserPosts(user.$id));
+  const { data: posts } = useAppwrite({ fn: () => getUserPosts(user.$id) });
 
   const logout = async () => {
     await signOut();
@@ -24,16 +31,8 @@ const Profile = () => {
     <SafeAreaView className="bg-primary h-full">
       <FlatList
         data={posts}
-        keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => (
-          <VideoCard
-            title={item.title}
-            thumbnail={item.thumbnail}
-            video={item.video}
-            creator={item.creator.username}
-            avatar={item.creator.avatar}
-          />
-        )}
+        keyExtractor={(item: Post) => item.$id}
+        renderItem={renderItem}
         ListEmptyComponent={() => (
           <EmptyState
             title="No Videos Found"
@@ -62,6 +61,7 @@ const Profile = () => {
             </View>
 
             <InfoBox
+              subtitle="Username"
               title={user?.username}
               containerStyles="mt-5"
               titleStyles="text-lg"
@@ -69,7 +69,7 @@ const Profile = () => {
 
             <View className="mt-5 flex flex-row">
               <InfoBox
-                title={posts.length || 0}
+                title={posts.length.toString() || "0"}
                 subtitle="Posts"
                 titleStyles="text-xl"
                 containerStyles="mr-10"

@@ -1,21 +1,22 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import React, { createContext, useContext, useEffect, useState } from "react";
 
 import { getCurrentUser } from "../lib/appwrite";
 import User from "../types/user";
 
-const GlobalContext = createContext(null);
-
+const GlobalContext = createContext(
+  {} as {
+    isLogged: boolean;
+    setIsLogged: (value: boolean) => void;
+    user: User | null;
+    setUser: (value: User | null) => void;
+    loading: boolean;
+  }
+);
 export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
-  const [user, setUser] = useState<User | null>(null);
+  const [user, setUser] = useState<null | User>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -37,19 +38,18 @@ const GlobalProvider = ({ children }) => {
       });
   }, []);
 
-  const value = useMemo(
-    () => ({
-      isLogged,
-      setIsLogged,
-      user,
-      setUser,
-      loading,
-    }),
-    [isLogged, user, loading]
-  );
-
   return (
-    <GlobalContext.Provider value={value}>{children}</GlobalContext.Provider>
+    <GlobalContext.Provider
+      value={{
+        isLogged,
+        setIsLogged,
+        user,
+        setUser,
+        loading,
+      }}
+    >
+      {children}
+    </GlobalContext.Provider>
   );
 };
 

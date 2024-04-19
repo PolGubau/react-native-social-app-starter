@@ -67,25 +67,28 @@ const SignUp = () => {
           </Text>
 
           <Input
+            placeholder="Enter your username"
             label="Username"
             value={form.username}
-            handleChangeText={(e) => setForm({ ...form, username: e })}
-            otherStyles="mt-10"
+            onChangeText={(e) => setForm({ ...form, username: e })}
+            className="mt-10"
           />
 
           <Input
+            placeholder="Enter your email"
             label="Email"
             value={form.email}
-            handleChangeText={(e) => setForm({ ...form, email: e })}
-            otherStyles="mt-7"
+            onChangeText={(e) => setForm({ ...form, email: e })}
+            className="mt-7"
             keyboardType="email-address"
           />
 
           <Input
+            placeholder="Enter your password"
             label="Password"
             value={form.password}
-            handleChangeText={(e) => setForm({ ...form, password: e })}
-            otherStyles="mt-7"
+            onChangeText={(e) => setForm({ ...form, password: e })}
+            className="mt-7"
           />
 
           <CustomButton

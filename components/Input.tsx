@@ -11,7 +11,6 @@ import { TextInputProps } from "react-native";
 interface InputProps extends TextInputProps {
   label: string;
   placeholder: string;
-  handleChange: (text: string) => void;
   value: string;
   className?: string;
 }
@@ -19,7 +18,6 @@ interface InputProps extends TextInputProps {
 const Input = ({
   label,
   placeholder,
-  handleChange,
   value,
   className,
   ...props
@@ -38,7 +36,6 @@ const Input = ({
           value={value}
           placeholder={placeholder}
           placeholderTextColor="#7B7B8B"
-          onChangeText={handleChange}
           secureTextEntry={label === "Password" && !showPassword}
           {...props}
         />

@@ -7,7 +7,15 @@ import { EmptyState, SearchInput, Trending, VideoCard } from "../../components";
 import { FlatList, Image, SafeAreaView, Text, View } from "../../api/elements";
 import { Post } from "../../types/post";
 import { ListRenderItem, RefreshControl } from "react-native";
-
+export const renderItem: ListRenderItem<Post> = ({ item }) => (
+  <VideoCard
+    title={item.title}
+    thumbnail={item.thumbnail}
+    video={item.video}
+    creator={item.creator.username}
+    avatar={item.creator.avatar}
+  />
+);
 const Home = () => {
   const { data: posts, refetch } = useAppwrite({ fn: getAllPosts });
   const { data: latestPosts } = useAppwrite({ fn: getLatestPosts });
@@ -25,17 +33,9 @@ const Home = () => {
   // and horizontal flatlist
 
   //  we cannot do that with just scrollview as there's both horizontal and vertical scroll (two flat lists, within trending)
-  const renderItem: ListRenderItem<Post> = ({ item }) => (
-    <VideoCard
-      title={item.title}
-      thumbnail={item.thumbnail}
-      video={item.video}
-      creator={item.creator.username}
-      avatar={item.creator.avatar}
-    />
-  );
+
   return (
-    <SafeAreaView className="bg-primary">
+    <SafeAreaView className="bg-primary h-full">
       <FlatList
         data={posts}
         keyExtractor={(item: Post) => item.$id}

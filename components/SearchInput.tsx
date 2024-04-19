@@ -5,7 +5,11 @@ import { icons } from "../constants";
 import { Image, TextInput, TouchableOpacity, View } from "../api/elements";
 import { Alert } from "react-native";
 
-const SearchInput = ({ initialQuery = "" }: { initialQuery?: string }) => {
+interface SearchInputProps {
+  initialQuery?: string;
+}
+
+const SearchInput = ({ initialQuery = "" }: SearchInputProps) => {
   const pathname = usePathname();
   const [query, setQuery] = useState(initialQuery || "");
 

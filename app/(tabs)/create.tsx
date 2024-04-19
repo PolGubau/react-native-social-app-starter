@@ -1,21 +1,22 @@
 import { useState } from "react";
 import { router } from "expo-router";
-import { ResizeMode, Video } from "expo-av";
+import { ResizeMode } from "expo-av";
 import * as DocumentPicker from "expo-document-picker";
-import { SafeAreaView } from "react-native-safe-area-context";
 import {
-  View,
-  Text,
-  Alert,
   Image,
-  TouchableOpacity,
+  SafeAreaView,
   ScrollView,
-} from "react-native";
+  Text,
+  TouchableOpacity,
+  Video,
+  View,
+} from "../../api/elements";
 
 import { icons } from "../../constants";
 import { createVideoPost } from "../../lib/appwrite";
-import { CustomButton, FormField } from "../../components";
+import { CustomButton, Input } from "../../components";
 import { useGlobalContext } from "../../context/GlobalProvider";
+import { Alert } from "react-native";
 
 const Create = () => {
   const { user } = useGlobalContext();
@@ -27,11 +28,11 @@ const Create = () => {
     prompt: "",
   });
 
-  const openPicker = async (selectType) => {
+  const openPicker = async (selectType: "image" | "video") => {
     const result = await DocumentPicker.getDocumentAsync({
       type:
         selectType === "image"
-          ? ["image/png", "image/jpg"]
+          ? ["image/png", "image/jpg", "image/jpeg", "image/gif"]
           : ["video/mp4", "video/gif"],
     });
 
@@ -58,9 +59,9 @@ const Create = () => {
 
   const submit = async () => {
     if (
-      (form.prompt === "") |
-      (form.title === "") |
-      !form.thumbnail |
+      form.prompt === "" ||
+      form.title === "" ||
+      !form.thumbnail ||
       !form.video
     ) {
       return Alert.alert("Please provide all fields");
@@ -94,12 +95,12 @@ const Create = () => {
       <ScrollView className="px-4 my-6">
         <Text className="text-2xl text-white font-psemibold">Upload Video</Text>
 
-        <FormField
-          title="Video Title"
+        <Input
+          label="Video Title"
           value={form.title}
           placeholder="Give your video a catchy title..."
-          handleChangeText={(e) => setForm({ ...form, title: e })}
-          otherStyles="mt-10"
+          onChangeText={(e) => setForm({ ...form, title: e })}
+          className="mt-10"
         />
 
         <View className="mt-7 space-y-2">
@@ -159,12 +160,12 @@ const Create = () => {
           </TouchableOpacity>
         </View>
 
-        <FormField
-          title="AI Prompt"
+        <Input
+          label="AI Prompt"
           value={form.prompt}
           placeholder="The AI prompt of your video...."
-          handleChangeText={(e) => setForm({ ...form, prompt: e })}
-          otherStyles="mt-7"
+          onChangeText={(e) => setForm({ ...form, prompt: e })}
+          className="mt-7"
         />
 
         <CustomButton

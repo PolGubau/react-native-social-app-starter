@@ -67,7 +67,7 @@ const SignIn = () => {
             placeholder="Enter your email"
             label="Email"
             value={form.email}
-            handleChange={(e) => setForm({ ...form, email: e })}
+            onChangeText={(e) => setForm({ ...form, email: e })}
             className="mt-7"
             keyboardType="email-address"
           />
@@ -76,7 +76,7 @@ const SignIn = () => {
             label="Password"
             placeholder="Enter your password"
             value={form.password}
-            handleChange={(e) => setForm({ ...form, password: e })}
+            onChangeText={(e) => setForm({ ...form, password: e })}
             className="mt-7"
           />
 

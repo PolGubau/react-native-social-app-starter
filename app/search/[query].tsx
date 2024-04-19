@@ -1,34 +1,31 @@
 import { useEffect } from "react";
 import { useLocalSearchParams } from "expo-router";
-import { View, Text, FlatList } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
 
 import useAppwrite from "../../lib/useAppwrite";
 import { searchPosts } from "../../lib/appwrite";
 import { EmptyState, SearchInput, VideoCard } from "../../components";
+import { FlatList, SafeAreaView, Text, View } from "../../api/elements";
+import { renderItem } from "../(tabs)/home";
+import { Post } from "../../types/post";
 
 const Search = () => {
   const { query } = useLocalSearchParams();
-  const { data: posts, refetch } = useAppwrite(() => searchPosts(query));
+  const { data: posts, refetch } = useAppwrite({
+    fn: () => searchPosts(query),
+  });
 
   useEffect(() => {
     refetch();
   }, [query]);
 
+  const initialQuery = query as string;
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
+        onRefresh={refetch}
         data={posts}
-        keyExtractor={(item) => item.$id}
-        renderItem={({ item }) => (
-          <VideoCard
-            title={item.title}
-            thumbnail={item.thumbnail}
-            video={item.video}
-            creator={item.creator.username}
-            avatar={item.creator.avatar}
-          />
-        )}
+        keyExtractor={(item: Post) => item.$id}
+        renderItem={renderItem}
         ListHeaderComponent={() => (
           <>
             <View className="flex my-6 px-4">
@@ -40,7 +37,7 @@ const Search = () => {
               </Text>
 
               <View className="mt-6 mb-8">
-                <SearchInput initialQuery={query} refetch={refetch} />
+                <SearchInput initialQuery={initialQuery} />
               </View>
             </View>
           </>
