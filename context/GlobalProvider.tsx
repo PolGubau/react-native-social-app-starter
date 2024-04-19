@@ -7,6 +7,7 @@ import React, {
 } from "react";
 
 import { getCurrentUser } from "../lib/appwrite";
+import User from "../types/user";
 
 const GlobalContext = createContext(null);
 
@@ -14,7 +15,7 @@ export const useGlobalContext = () => useContext(GlobalContext);
 
 const GlobalProvider = ({ children }) => {
   const [isLogged, setIsLogged] = useState(false);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

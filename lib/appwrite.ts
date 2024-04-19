@@ -7,6 +7,8 @@ import {
   Query,
   Storage,
 } from "react-native-appwrite";
+import User from "../types/user";
+import { Post } from "../types/post";
 
 export const appwriteConfig = {
   endpoint: "https://cloud.appwrite.io/v1",
@@ -131,6 +133,20 @@ export async function signOut() {
   }
 }
 
+export async function getUserById(userId: User["id"]) {
+  try {
+    const user = await databases.getDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      userId
+    );
+
+    return user;
+  } catch (error) {
+    throw new Error(error);
+  }
+}
+
 // Upload File
 export async function uploadFile(file, type) {
   if (!file) return;
@@ -208,7 +224,7 @@ export async function createVideoPost(form) {
 }
 
 // Get all video Posts
-export async function getAllPosts() {
+export async function getAllPosts(): Promise<Post[] | null> {
   try {
     const posts = await databases.listDocuments(
       appwriteConfig.databaseId,
