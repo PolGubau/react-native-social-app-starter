@@ -133,7 +133,7 @@ export async function signOut() {
   }
 }
 
-export async function getUserById(userId: User["id"]) {
+export async function getUserById(userId: User["$id"]) {
   try {
     const user = await databases.getDocument(
       appwriteConfig.databaseId,
@@ -238,7 +238,7 @@ export async function getAllPosts(): Promise<Post[] | null> {
 }
 
 // Get video posts created by user
-export async function getUserPosts(userId) {
+export async function getUserPosts(userId: User["$id"]) {
   try {
     const posts = await databases.listDocuments(
       appwriteConfig.databaseId,
