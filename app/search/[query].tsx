@@ -9,7 +9,7 @@ import { Post } from "../../types/post";
 
 const Search = () => {
   const { query } = useLocalSearchParams();
-  const { data: posts, refetch } = useAppwrite({
+  const { data: posts } = useAppwrite({
     fn: () => searchPosts(query),
   });
 
@@ -17,7 +17,7 @@ const Search = () => {
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
-        onRefresh={refetch}
+        // onRefresh={refetch}
         data={posts}
         keyExtractor={(item: Post) => item.$id}
         renderItem={renderItem}

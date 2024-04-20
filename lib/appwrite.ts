@@ -308,3 +308,28 @@ export const getExercises = async () => {
   const data = await response.json();
   return data;
 };
+
+export interface Routine {
+  id: number;
+  name: string;
+  image: string;
+  exercises: {
+    id: number;
+    name: string;
+    image: string;
+  }[];
+  creator: {
+    id: number;
+    username: string;
+    image: string;
+  };
+  dateOfCreation: string;
+  dateOfLastEdition: string;
+  public: boolean;
+}
+export const getRoutines = async (): Promise<Routine[] | null> => {
+  const url = "http://13.39.23.87/routines";
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+};

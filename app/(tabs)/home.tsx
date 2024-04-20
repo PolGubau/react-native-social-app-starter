@@ -19,9 +19,9 @@ import { Redirect } from "expo-router";
 import { Authenthicator } from "../../lib/authenticator";
 export const renderItem: ListRenderItem<Post> = ({ item }) => (
   <VideoCard
+    id={item.$id}
     title={item.title}
     thumbnail={item.thumbnail}
-    video={item.video}
     creator={item.creator.username}
     avatar={item.creator.avatar}
   />

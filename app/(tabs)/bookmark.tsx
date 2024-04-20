@@ -1,25 +1,42 @@
 import { useEffect, useState } from "react";
-import { SafeAreaView, ScrollView, Text } from "../../api/elements";
-import { getExercises } from "../../lib/appwrite";
+import { ListRenderItem } from "react-native";
+import { FlatList, SafeAreaView, Text, View } from "../../api/elements";
+import { VideoCard } from "../../components";
+import { Routine, getRoutines } from "../../lib/appwrite";
 
 export default function Bookmark() {
-  const [exercises, setExercises] = useState([]);
+  const [routines, setRoutines] = useState<Routine[]>([]);
 
   useEffect(() => {
-    getExercises().then((res) => {
-      setExercises(res);
+    getRoutines().then((res) => {
+      if (!res) return console.error("No routines found");
+      if (res) setRoutines(res);
     });
   }, []);
+  const routineRenderer: ListRenderItem<Routine> = ({ item }) => (
+    <VideoCard
+      title={item.name}
+      thumbnail={item.image}
+      creator={item.creator.username}
+      avatar={item.creator.image}
+      id={item.id}
+    />
+  );
 
   return (
     <SafeAreaView className="bg-primary h-full">
-      <ScrollView className="px-4 my-6">
-        <Text className="text-2xl text-white font-psemibold">Bookmarks</Text>
-        {/* <Text>Title: {notification?.request?.content.title} </Text> */}
-        <Text className="text-white mt-4">Exercises:</Text>
-        <Text className="text-white mt-4"> {JSON.stringify(exercises)} </Text>
-        {/*  */}
-      </ScrollView>
+      <FlatList
+        ListHeaderComponent={() => (
+          <View className="flex my-6 px-4">
+            <Text className="text-2xl font-psemibold text-white mt-1">
+              Routines
+            </Text>
+          </View>
+        )}
+        data={routines}
+        keyExtractor={(item: Routine) => item.id.toString()}
+        renderItem={routineRenderer}
+      />
     </SafeAreaView>
   );
 }

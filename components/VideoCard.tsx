@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { ResizeMode } from "expo-av";
-
 import { icons } from "../constants";
-import { Image, Text, TouchableOpacity, Video, View } from "../api/elements";
+import { Image, Text, TouchableOpacity, View } from "../api/elements";
+import { Alert } from "react-native";
 
-const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
-  const [play, setPlay] = useState(false);
+const RoutineCard = ({ title, creator, avatar, thumbnail, id }) => {
+  const onClick = () => {
+     
+  };
 
   return (
     <View className="flex flex-col items-center px-4 mb-14">
@@ -40,40 +40,19 @@ const VideoCard = ({ title, creator, avatar, thumbnail, video }) => {
         </View>
       </View>
 
-      {play ? (
-        <Video
-          source={{ uri: video }}
-          className="w-full h-60 rounded-xl mt-3"
-          resizeMode={ResizeMode.CONTAIN}
-          useNativeControls
-          shouldPlay
-          onPlaybackStatusUpdate={(status) => {
-            if (status.isLoaded && status.didJustFinish) {
-              setPlay(false);
-            }
-          }}
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={onClick}
+        className="w-full h-60 rounded-xl mt-3 relative flex justify-center items-center"
+      >
+        <Image
+          source={{ uri: thumbnail }}
+          className="w-full h-full rounded-xl mt-3"
+          resizeMode="cover"
         />
-      ) : (
-        <TouchableOpacity
-          activeOpacity={0.7}
-          onPress={() => setPlay(true)}
-          className="w-full h-60 rounded-xl mt-3 relative flex justify-center items-center"
-        >
-          <Image
-            source={{ uri: thumbnail }}
-            className="w-full h-full rounded-xl mt-3"
-            resizeMode="cover"
-          />
-
-          <Image
-            source={icons.play}
-            className="w-12 h-12 absolute"
-            resizeMode="contain"
-          />
-        </TouchableOpacity>
-      )}
+      </TouchableOpacity>
     </View>
   );
 };
 
-export default VideoCard;
+export default RoutineCard;

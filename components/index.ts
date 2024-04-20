@@ -1,4 +1,4 @@
-import VideoCard from "./VideoCard";
+import RoutineCard from "./VideoCard";
 import Input from "./Input";
 import CustomButton from "./CustomButton";
 import InfoBox from "./InfoBox";
@@ -8,7 +8,7 @@ import SearchInput from "./SearchInput";
 import EmptyState from "./EmptyState";
 
 export {
-  VideoCard,
+  RoutineCard as VideoCard,
   Input,
   CustomButton,
   InfoBox,
