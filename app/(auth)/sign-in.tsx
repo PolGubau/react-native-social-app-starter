@@ -1,11 +1,8 @@
-import { useState } from "react";
+import { hasHardwareAsync } from "expo-local-authentication";
 import { Link, router } from "expo-router";
-import { Dimensions, Alert } from "react-native";
+import { useEffect, useState } from "react";
+import { Alert, Dimensions } from "react-native";
 
-import { images } from "../../constants";
-import { CustomButton, Input } from "../../components";
-import { getCurrentUser, signIn } from "../../lib/appwrite";
-import { useGlobalContext } from "../../context/GlobalProvider";
 import {
   Image,
   SafeAreaView,
@@ -13,6 +10,10 @@ import {
   Text,
   View,
 } from "../../api/elements";
+import { CustomButton, Input } from "../../components";
+import { images } from "../../constants";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { getCurrentUser, signIn } from "../../lib/appwrite";
 
 const SignIn = () => {
   const { setUser, setIsLogged } = useGlobalContext();
@@ -58,11 +59,9 @@ const SignIn = () => {
             resizeMode="contain"
             className="w-[115px] h-[34px]"
           />
-
           <Text className="text-2xl font-semibold text-white mt-10 font-psemibold">
-            Log in to Aora
+            Log in to Trackup
           </Text>
-
           <Input
             placeholder="Enter your email"
             label="Email"
@@ -71,7 +70,6 @@ const SignIn = () => {
             className="mt-7"
             keyboardType="email-address"
           />
-
           <Input
             label="Password"
             placeholder="Enter your password"
@@ -79,7 +77,6 @@ const SignIn = () => {
             onChangeText={(e) => setForm({ ...form, password: e })}
             className="mt-7"
           />
-
           <CustomButton
             title="Sign In"
             onPress={submit}

@@ -75,6 +75,24 @@ export async function createUser({
   }
 }
 
+export async function modifyUser(
+  userId: User["$id"],
+  data: Partial<User>
+): Promise<User | null> {
+  try {
+    const user = await databases.updateDocument(
+      appwriteConfig.databaseId,
+      appwriteConfig.userCollectionId,
+      userId,
+      data
+    );
+
+    return user;
+  } catch (error) {
+    throw new Error("Error saving biometrics", error);
+  }
+}
+
 // Sign In
 export interface SignInProps {
   email: string;

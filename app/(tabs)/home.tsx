@@ -2,11 +2,21 @@ import { useState } from "react";
 
 import { images } from "../../constants";
 import useAppwrite from "../../lib/useAppwrite";
-import { getAllPosts, getLatestPosts } from "../../lib/appwrite";
-import { EmptyState, SearchInput, Trending, VideoCard } from "../../components";
+import { getAllPosts, getLatestPosts, modifyUser } from "../../lib/appwrite";
+import {
+  CustomButton,
+  EmptyState,
+  SearchInput,
+  Trending,
+  VideoCard,
+} from "../../components";
+
 import { FlatList, Image, SafeAreaView, Text, View } from "../../api/elements";
 import { Post } from "../../types/post";
-import { ListRenderItem, RefreshControl } from "react-native";
+import { Alert, ListRenderItem, RefreshControl } from "react-native";
+import { useGlobalContext } from "../../context/GlobalProvider";
+import { Redirect } from "expo-router";
+import { Authenthicator } from "../../lib/authenticator";
 export const renderItem: ListRenderItem<Post> = ({ item }) => (
   <VideoCard
     title={item.title}
@@ -21,7 +31,7 @@ const Home = () => {
   const { data: latestPosts } = useAppwrite({ fn: getLatestPosts });
 
   const [refreshing, setRefreshing] = useState(false);
-
+  const { user, setUser } = useGlobalContext();
   const onRefresh = async () => {
     setRefreshing(true);
     await refetch();
@@ -34,6 +44,22 @@ const Home = () => {
 
   //  we cannot do that with just scrollview as there's both horizontal and vertical scroll (two flat lists, within trending)
 
+  if (!user?.$id) return <Redirect href="/sign-in" />;
+  const handleEnableBiometrics = async () => {
+    const isAble = await Authenthicator.unlock();
+    if (isAble) {
+      const updatedUser = await modifyUser(user.$id, {
+        biometric_enabled: true,
+      });
+      if (!updatedUser) {
+        Alert.alert("Error", "Failed to enable biometrics");
+        return;
+      }
+      setUser(updatedUser);
+      Alert.alert("Success", "Biometrics enabled successfully");
+    }
+  };
+
   return (
     <SafeAreaView className="bg-primary h-full">
       <FlatList
@@ -41,25 +67,34 @@ const Home = () => {
         keyExtractor={(item: Post) => item.$id}
         renderItem={renderItem}
         ListHeaderComponent={() => (
-          <View className="flex my-6 px-4 space-y-6">
-            <View className="flex justify-between items-start flex-row mb-6">
+          <View className="my-6 px-4 flex ">
+            <View className="flex justify-between items-start flex-row mb-6 gap-6">
               <View>
                 <Text className="font-pmedium text-sm text-gray-100">
                   Welcome Back
                 </Text>
                 <Text className="text-2xl font-psemibold text-white">
-                  JSMastery
+                  {user.username ?? "User"}
                 </Text>
               </View>
 
               <View className="mt-1.5">
                 <Image
-                  source={images.logoSmall}
+                  src={user.avatar}
                   className="w-9 h-10"
                   resizeMode="contain"
                 />
               </View>
             </View>
+
+            {!user.biometric_enabled && (
+              <CustomButton
+                containerStyles="bg-gray-300 mb-4"
+                onPress={handleEnableBiometrics}
+              >
+                Enable Biometrics
+              </CustomButton>
+            )}
 
             <SearchInput />
 

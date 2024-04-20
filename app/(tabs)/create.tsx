@@ -30,10 +30,7 @@ const Create = () => {
 
   const openPicker = async (selectType: "image" | "video") => {
     const result = await DocumentPicker.getDocumentAsync({
-      type:
-        selectType === "image"
-          ? ["image/png", "image/jpeg"]
-          : ["video/mp4", "video/gif"],
+      type: selectType === "image" ? ["image/jpg"] : ["video/mp4", "video/gif"],
     });
 
     if (!result.canceled) {

@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { ResizeMode } from "expo-av";
-import * as Animatable from "react-native-animatable";
 
 import { icons } from "../constants";
 import {
@@ -11,29 +10,21 @@ import {
   TouchableOpacity,
   Video,
 } from "../api/elements";
-import { ImageStyle, TextStyle, ViewStyle } from "react-native";
-// Define the animation types
-export interface CustomAnimation<T = TextStyle & ViewStyle & ImageStyle> {
-  from?: T;
-  to?: T;
-  style?: T;
-  easing?: Animatable.Easing;
-  [progress: number]: T;
-}
+import { Post } from "../types/post";
 
 const TrendingItem = ({
   activeItem,
   item,
 }: {
-  activeItem: string;
-  item: { id: string; video: string; thumbnail: string };
+  activeItem: Post;
+  item: Post;
 }) => {
   const [play, setPlay] = useState(false);
 
   return (
     <AnimatableView
       className="mr-5"
-      animation={activeItem === item.id ? "zoomIn" : "zoomOut"}
+      animation={activeItem["$id"] === item.$id ? "zoomIn" : "zoomOut"}
       duration={500}
     >
       {play ? (
@@ -74,12 +65,12 @@ const TrendingItem = ({
   );
 };
 
-const Trending = ({ posts }) => {
-  const [activeItem, setActiveItem] = useState(posts[0]);
+const Trending = ({ posts }: { posts: Post[] }) => {
+  const [activeItem, setActiveItem] = useState<Post>(posts[0]);
 
   const viewableItemsChanged = ({ viewableItems }) => {
     if (viewableItems.length > 0) {
-      setActiveItem(viewableItems[0].key);
+      setActiveItem(viewableItems[0].item);
     }
   };
 
@@ -87,7 +78,7 @@ const Trending = ({ posts }) => {
     <FlatList
       data={posts}
       horizontal
-      keyExtractor={(item: any) => item.id}
+      keyExtractor={(item: Post) => item.$id}
       renderItem={({ item }: any) => (
         <TrendingItem activeItem={activeItem} item={item} />
       )}

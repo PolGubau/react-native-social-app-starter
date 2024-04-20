@@ -2,7 +2,7 @@ import React from "react";
 import { Text, TouchableOpacity } from "../api/elements";
 import { TouchableOpacityProps } from "react-native";
 export interface CustomButtonProps extends TouchableOpacityProps {
-  title: string;
+  title?: string;
   isLoading?: boolean;
   containerStyles?: string;
   textStyles?: string;
@@ -24,7 +24,7 @@ const CustomButton = ({
       disabled={isLoading}
     >
       <Text className={`text-primary font-psemibold text-lg ${textStyles}`}>
-        {title}
+        {title ?? props.children}
       </Text>
     </TouchableOpacity>
   );
