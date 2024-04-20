@@ -301,3 +301,10 @@ export async function getLatestPosts() {
     throw new Error(error);
   }
 }
+
+export const getExercises = async () => {
+  const url = "http://13.39.23.87/exercises?page=0&size=10&locale=en";
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+};

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "trackup",
+    "name": "TrackUp",
     "slug": "trackup",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,9 +12,7 @@
       "backgroundColor": "#ffffff"
     },
     "scheme": "trackup",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "infoPlist": {
